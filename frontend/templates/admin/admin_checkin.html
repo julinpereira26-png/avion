@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirmar Check-in | Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-gray-50 h-screen flex items-center justify-center">
+  <div class="bg-white p-8 shadow-lg rounded-xl w-full max-w-md text-center">
+    <h2 class="text-2xl font-semibold mb-4">Confirmar Check-in</h2>
+    <p id="reservaInfo" class="text-gray-600 mb-4">Cargando datos...</p>
+    <button id="confirmBtn" class="bg-blue-600 text-white px-5 py-2 rounded-full font-medium hover:bg-blue-700 transition">
+      Confirmar Check-in
+    </button>
+  </div>
+
+  <script>
+    const API_URL = "http://127.0.0.1:5000";
+    const params = new URLSearchParams(window.location.search);
+    const codigo = params.get("codigo");
+
+    async function cargarReserva() {
+      try {
+        const res = await fetch(`${API_URL}/checkin/info/${codigo}`);
+        const data = await res.json();
+        if (!res.ok) throw data;
+        document.getElementById("reservaInfo").innerHTML = `
+          <b>Código:</b> ${data.codigo_reserva}<br>
+          <b>Vuelo:</b> ${data.vuelo.origen} → ${data.vuelo.destino}<br>
+          <b>Fecha:</b> ${data.vuelo.fecha}<br>
+          <b>Estado:</b> ${data.estado_checkin}
+        `;
+      } catch (err) {
+        Swal.fire("Error", err.error || "No se encontró la reserva", "error");
+      }
+    }
+
+    document.getElementById("confirmBtn").addEventListener("click", async () => {
+      const { value: pass } = await Swal.fire({
+        title: "Autenticación requerida",
+        input: "password",
+        inputLabel: "Contraseña del administrador",
+        inputPlaceholder: "********",
+        confirmButtonText: "Verificar",
+        showCancelButton: true
+      });
+
+      if (pass !== "admin123") {
+        Swal.fire("Error", "Contraseña incorrecta", "error");
+        return;
+      }
+
+      const res = await fetch(`${API_URL}/checkin/confirmar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codigo_reserva: codigo })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        Swal.fire("Éxito", "Check-in marcado como HECHO", "success");
+        cargarReserva();
+      } else {
+        Swal.fire("Error", data.error || "No se pudo confirmar", "error");
+      }
+    });
+
+    cargarReserva();
+  </script>
+</body>
+</html>

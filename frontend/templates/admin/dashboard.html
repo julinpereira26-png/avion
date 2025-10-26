@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Booking Plane</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+<!-- NAVBAR -->
+<nav class="bg-indigo-600 text-white shadow fixed w-full z-10 top-0">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
+    <div class="text-2xl font-bold">Booking Plane Admin</div>
+    <div class="space-x-4">
+      <button onclick="showTab('modelos')" class="nav-btn px-3 py-2 rounded bg-indigo-800 hover:bg-indigo-700 transition">Modelos</button>
+      <button onclick="showTab('aviones')" class="nav-btn px-3 py-2 rounded hover:bg-indigo-700 transition">Aviones</button>
+      <button onclick="showTab('vuelos')" class="nav-btn px-3 py-2 rounded hover:bg-indigo-700 transition">Vuelos</button>
+    </div>
+  </div>
+</nav>
+
+<main class="max-w-7xl mx-auto p-6 mt-20">
+
+  <!-- ==================== MODELOS ==================== -->
+  <div id="modelos" class="tab-content">
+    <h2 class="text-xl font-semibold mb-4 text-gray-700">CRUD Modelos</h2>
+
+    <form id="formModelo" class="flex flex-col sm:flex-row gap-2 mb-4">
+      <input type="text" name="nombre" placeholder="Nombre modelo" class="border rounded px-3 py-2 flex-1 focus:ring-2 focus:ring-indigo-400" required>
+      <input type="number" name="filas" placeholder="Filas" class="border rounded px-3 py-2 w-24 focus:ring-2 focus:ring-indigo-400" required>
+      <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded shadow hover:bg-indigo-700 transition">Agregar</button>
+    </form>
+
+    <div class="overflow-x-auto bg-white rounded shadow">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-indigo-50 text-gray-600">
+          <tr>
+            <th class="px-6 py-3 text-left font-medium">Nombre</th>
+            <th class="px-6 py-3 text-left font-medium">Filas</th>
+            <th class="px-6 py-3 text-left font-medium">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="listaModelos" class="divide-y divide-gray-200"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== AVIONES ==================== -->
+  <div id="aviones" class="tab-content hidden">
+    <h2 class="text-xl font-semibold mb-4 text-gray-700">CRUD Aviones</h2>
+
+    <form id="formAvion" class="flex flex-col sm:flex-row gap-2 mb-4">
+      <select name="id_modelo" id="selectModelo" class="border rounded px-3 py-2 flex-1 focus:ring-2 focus:ring-indigo-400" required></select>
+      <input type="text" name="matricula" placeholder="Matrícula" class="border rounded px-3 py-2 flex-1 focus:ring-2 focus:ring-indigo-400" required>
+      <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded shadow hover:bg-indigo-700 transition">Agregar</button>
+    </form>
+
+    <div class="overflow-x-auto bg-white rounded shadow">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-indigo-50 text-gray-600">
+          <tr>
+            <th class="px-6 py-3 text-left font-medium">Matrícula</th>
+            <th class="px-6 py-3 text-left font-medium">Modelo</th>
+            <th class="px-6 py-3 text-left font-medium">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="listaAviones" class="divide-y divide-gray-200"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== VUELOS ==================== -->
+  <div id="vuelos" class="tab-content hidden">
+    <h2 class="text-xl font-semibold mb-4 text-gray-700">CRUD Vuelos</h2>
+
+    <form id="formVuelo" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+      <select name="id_avion" id="selectAvion" class="border rounded px-3 py-2 focus:ring-2 focus:ring-indigo-400" required></select>
+      <input type="text" name="origen" placeholder="Origen" class="border rounded px-3 py-2 focus:ring-2 focus:ring-indigo-400" required>
+      <input type="text" name="destino" placeholder="Destino" class="border rounded px-3 py-2 focus:ring-2 focus:ring-indigo-400" required>
+      <input type="date" name="fecha" class="border rounded px-3 py-2 focus:ring-2 focus:ring-indigo-400" required>
+      <input type="number" name="precio" placeholder="Precio" class="border rounded px-3 py-2 focus:ring-2 focus:ring-indigo-400" required>
+      <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded shadow hover:bg-indigo-700 transition col-span-1 sm:col-span-2 md:col-span-1">Agregar</button>
+    </form>
+
+    <div class="overflow-x-auto bg-white rounded shadow">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-indigo-50 text-gray-600">
+          <tr>
+            <th class="px-6 py-3 text-left font-medium">Origen</th>
+            <th class="px-6 py-3 text-left font-medium">Destino</th>
+            <th class="px-6 py-3 text-left font-medium">Avión</th>
+            <th class="px-6 py-3 text-left font-medium">Precio</th>
+            <th class="px-6 py-3 text-left font-medium">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="listaVuelos" class="divide-y divide-gray-200"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ===== Tabs =====
+function showTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+  document.getElementById(tab).classList.remove('hidden');
+  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('bg-indigo-800'));
+  event.target.classList.add('bg-indigo-800');
+}
+
+// ===== CRUD Modelos =====
+async function cargarModelos() {
+  const res = await fetch("http://127.0.0.1:5000/api/modelos");
+  const modelos = await res.json();
+  const cont = document.getElementById("listaModelos");
+  cont.innerHTML = modelos.map(m => `
+    <tr>
+      <td class="px-6 py-2">${m.nombre}</td>
+      <td class="px-6 py-2">${m.filas}</td>
+      <td class="px-6 py-2 flex gap-2">
+        <button onclick="editarModelo(${m.id_modelo}, '${m.nombre}', ${m.filas})" class="px-3 py-1 bg-yellow-400 rounded hover:bg-yellow-500 transition">Editar</button>
+        <button onclick="eliminarModelo(${m.id_modelo})" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">Eliminar</button>
+      </td>
+    </tr>
+  `).join("");
+
+  const select = document.getElementById("selectModelo");
+  select.innerHTML = modelos.map(m => `<option value="${m.id_modelo}">${m.nombre}</option>`).join("");
+}
+
+document.getElementById("formModelo").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  await fetch("http://127.0.0.1:5000/modelo", {
+    method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(data)
+  });
+  e.target.reset();
+  cargarModelos();
+});
+
+async function eliminarModelo(id){
+  if(!confirm("¿Eliminar modelo?")) return;
+  await fetch(`http://127.0.0.1:5000/api/modelos/${id}`, {method:"DELETE"});
+  cargarModelos();
+}
+
+function editarModelo(id,nombre,filas){
+  Swal.fire({
+    title: 'Editar Modelo',
+    html: `<input id="swal-nombre" class="swal2-input" placeholder="Nombre" value="${nombre}">
+           <input id="swal-filas" type="number" class="swal2-input" placeholder="Filas" value="${filas}">`,
+    showCancelButton: true,
+    confirmButtonText: 'Actualizar',
+  }).then(async result=>{
+    if(result.isConfirmed){
+      const nuevoNombre = document.getElementById('swal-nombre').value;
+      const nuevasFilas = document.getElementById('swal-filas').value;
+      await fetch(`http://127.0.0.1:5000/api/modelos/${id}`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({nombre:nuevoNombre, filas:parseInt(nuevasFilas)})
+      });
+      cargarModelos();
+    }
+  });
+}
+
+// ===== CRUD Aviones =====
+async function cargarAviones(){
+  const res = await fetch("http://127.0.0.1:5000/api/aviones");
+  const aviones = await res.json();
+  const cont = document.getElementById("listaAviones");
+  cont.innerHTML = aviones.map(a=>`
+    <tr>
+      <td class="px-6 py-2">${a.matricula}</td>
+      <td class="px-6 py-2">${a.modelo_nombre}</td>
+      <td class="px-6 py-2 flex gap-2">
+        <button onclick="editarAvion(${a.id_avion}, ${a.id_modelo}, '${a.matricula}')" class="px-3 py-1 bg-yellow-400 rounded hover:bg-yellow-500 transition">Editar</button>
+        <button onclick="eliminarAvion(${a.id_avion})" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">Eliminar</button>
+      </td>
+    </tr>
+  `).join("");
+
+  const select = document.getElementById("selectAvion");
+  select.innerHTML = aviones.map(a=>`<option value="${a.id_avion}">${a.matricula} (${a.modelo_nombre})</option>`).join("");
+}
+
+document.getElementById("formAvion").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  await fetch("http://127.0.0.1:5000/avion", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data)});
+  e.target.reset();
+  cargarAviones();
+});
+
+async function eliminarAvion(id){
+  if(!confirm("¿Eliminar avión?")) return;
+  await fetch(`http://127.0.0.1:5000/api/aviones/${id}`, {method:"DELETE"});
+  cargarAviones();
+}
+
+function editarAvion(id, id_modelo, matricula){
+  Swal.fire({
+    title: 'Editar Avión',
+    html: `<input id="swal-matricula" class="swal2-input" placeholder="Matrícula" value="${matricula}">
+           <input id="swal-modelo" type="number" class="swal2-input" placeholder="ID Modelo" value="${id_modelo}">`,
+    showCancelButton: true,
+    confirmButtonText: 'Actualizar',
+  }).then(async result=>{
+    if(result.isConfirmed){
+      const nuevaMatricula = document.getElementById('swal-matricula').value;
+      const nuevoModelo = document.getElementById('swal-modelo').value;
+      await fetch(`http://127.0.0.1:5000/api/aviones/${id}`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({id_modelo:parseInt(nuevoModelo), matricula:nuevaMatricula})
+      });
+      cargarAviones();
+    }
+  });
+}
+
+// ===== CRUD Vuelos =====
+async function cargarVuelos(){
+  const res = await fetch("http://127.0.0.1:5000/api/vuelos");
+  const vuelos = await res.json();
+  const cont = document.getElementById("listaVuelos");
+  cont.innerHTML = vuelos.map(v=>`
+    <tr>
+      <td class="px-6 py-2">${v.origen}</td>
+      <td class="px-6 py-2">${v.destino}</td>
+      <td class="px-6 py-2">${v.matricula}</td>
+      <td class="px-6 py-2">$${v.precio}</td>
+      <td class="px-6 py-2 flex gap-2">
+        <button onclick="editarVuelo(${v.id_vuelo}, ${v.id_avion}, '${v.origen}', '${v.destino}', '${v.fecha}', ${v.precio})" class="px-3 py-1 bg-yellow-400 rounded hover:bg-yellow-500 transition">Editar</button>
+        <button onclick="eliminarVuelo(${v.id_vuelo})" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">Eliminar</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+document.getElementById("formVuelo").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  await fetch("http://127.0.0.1:5000/vuelo", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data)});
+  e.target.reset();
+  cargarVuelos();
+});
+
+async function eliminarVuelo(id){
+  if(!confirm("¿Eliminar vuelo?")) return;
+  await fetch(`http://127.0.0.1:5000/api/vuelos/${id}`, {method:"DELETE"});
+  cargarVuelos();
+}
+
+function editarVuelo(id, id_avion, origen, destino, fecha, precio){
+  Swal.fire({
+    title: 'Editar Vuelo',
+    html: `<input id="swal-origen" class="swal2-input" placeholder="Origen" value="${origen}">
+           <input id="swal-destino" class="swal2-input" placeholder="Destino" value="${destino}">
+           <input id="swal-fecha" type="date" class="swal2-input" value="${fecha}">
+           <input id="swal-precio" type="number" class="swal2-input" placeholder="Precio" value="${precio}">`,
+    showCancelButton: true,
+    confirmButtonText: 'Actualizar',
+  }).then(async result=>{
+    if(result.isConfirmed){
+      const nuevoOrigen = document.getElementById('swal-origen').value;
+      const nuevoDestino = document.getElementById('swal-destino').value;
+      const nuevaFecha = document.getElementById('swal-fecha').value;
+      const nuevoPrecio = parseFloat(document.getElementById('swal-precio').value);
+      await fetch(`http://127.0.0.1:5000/api/vuelos/${id}`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({id_avion:parseInt(id_avion), origen:nuevoOrigen, destino:nuevoDestino, fecha:nuevaFecha, precio:nuevoPrecio})
+      });
+      cargarVuelos();
+    }
+  });
+}
+
+// ===== Inicializar =====
+cargarModelos();
+cargarAviones();
+cargarVuelos();
+</script>
+
+</body>
+</html>

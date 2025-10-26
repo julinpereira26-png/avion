@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check-in Online | Booking Plane</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col font-sans">
+
+  <!-- Navbar -->
+  <header class="bg-white shadow sticky top-0 z-20">
+    <nav class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+      <!-- LOGO -->
+      <div class="flex items-center gap-3">
+        <span class="font-bold text-2xl text-indigo-700 tracking-tight">Booking Plane</span>
+      </div>
+
+
+
+      </div>
+    </nav>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="flex-grow flex justify-center items-center px-4">
+    <div style="border-top: 5px solid blue;" class="bg-white shadow-xl p-8 w-full max-w-md border ">
+      
+      <h1 class="text-center text-2xl font-semibold text-gray-800 mb-2">
+        Check-in en línea
+      </h1>
+      <p class="text-center text-sm text-gray-600 mb-6">
+        <span class="font-semibold text-black">Ahorra tiempo en el aeropuerto</span>.<br>
+        Ingresa tu <b>código de reserva</b> o documento para confirmar tu asistencia.
+      </p>
+
+      <form id="checkinForm" class="space-y-5">
+        <!-- Código de reserva -->
+        <div>
+          <label for="codigo" class="block text-sm font-medium text-gray-700 mb-1">
+            Código de reserva
+          </label>
+          <div class="relative">
+            <input type="text" id="codigo" name="codigo"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 pl-10 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none"
+              placeholder="Ej: AB12CD34">
+            <span class="absolute left-1 top-1.5  text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M15.58 16.8L12 14.5l-3.58 2.3l1.08-4.12L6.21 10l4.25-.26L12 5.8l1.54 3.94l4.25.26l-3.29 2.68M20 12a2 2 0 0 1 2-2V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2a2 2 0 0 1-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 1-2-2"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Documento -->
+        <div>
+          <label for="documento" class="block text-sm font-medium text-gray-700 mb-1">
+            Documento del pagador
+          </label>
+          <div class="relative">
+            <input type="text" id="documento" name="documento"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 pl-10 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none"
+              placeholder="Ej: 123456789">
+            <span class="absolute left-1 top-1.5 text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="flex justify-between items-center pt-4">
+          <a href="/frontend/templates/index.html" class="border border-gray-800 text-gray-800 rounded-full px-5 py-2 font-medium hover:bg-gray-100 transition">
+            Volver
+          </a>
+          <button type="submit" 
+                  class="bg-blue-600 text-white rounded-full px-5 py-2 font-medium hover:bg-blue-700 transition">
+            Buscar
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-gray-500 text-sm py-4">
+    © 2025 Booking Plane — Todos los derechos reservados.
+  </footer>
+
+  <!-- JS para conectar con Flask -->
+  <script>
+    const API_URL = "http://127.0.0.1:5000";
+
+    document.getElementById("checkinForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const codigo = document.getElementById("codigo").value.trim();
+      const documento = document.getElementById("documento").value.trim();
+
+      if (!codigo && !documento) {
+        Swal.fire("Error", "Debes ingresar el código o el documento", "error");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/checkin/buscar`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ codigo, documento })
+        });
+        const data = await res.json();
+        if (!res.ok) throw data;
+
+        const pasajeros = data.pasajeros
+          .map(p => `${p.nombres} ${p.primer_apellido} ${p.segundo_apellido} — Asiento ${p.nombre_asiento}`)
+          .join("<br>");
+
+        Swal.fire({
+          title: "Reserva encontrada",
+          html: `
+            <div class='text-left text-sm'>
+              <b>Código:</b> ${data.codigo_reserva}<br>
+              <b>Vuelo:</b> ${data.origen} → ${data.destino}<br>
+              <b>Fecha:</b> ${data.fecha}<br><hr class="my-2">
+              <b>Pasajeros:</b><br>${pasajeros}
+            </div>
+          `,
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonText: "Confirmar Check-in",
+          cancelButtonText: "Cancelar",
+          confirmButtonColor: "#2563eb"
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const confirmRes = await fetch(`${API_URL}/checkin/confirmar`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ codigo_reserva: data.codigo_reserva })
+            });
+            const confirmData = await confirmRes.json();
+            if (!confirmRes.ok) throw confirmData;
+
+            Swal.fire({
+              title: "Check-in exitoso",
+              text: "Tu check-in ha sido completado. Se descargará tu tarjeta de embarque.",
+              icon: "success",
+              timer: 3000,
+              showConfirmButton: false
+            });
+
+            // Descargar PDF
+            setTimeout(() => {
+              window.location.href = `${API_URL}/checkin/pdf/${data.codigo_reserva}`;
+            }, 2500);
+          }
+        });
+
+      } catch (error) {
+        Swal.fire("Error", error.error || "No se pudo procesar el check-in", "error");
+      }
+    });
+  </script>
+</body>
+</html>

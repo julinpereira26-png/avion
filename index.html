@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cargando...</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* Degradado azul cielo */
+      background: linear-gradient(135deg, #87CEEB, #00BFFF);
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    .loader {
+      border: 8px solid rgba(255,255,255,0.3);
+      border-top: 8px solid white;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 15px rgba(255,255,255,0.5);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .texto {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      text-align: center;
+      animation: pulse 1.5s infinite;
+      text-shadow: 0 0 5px rgba(255,255,255,0.7);
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.5; }
+      50% { opacity: 1; }
+      100% { opacity: 0.5; }
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="loader"></div>
+    <div class="texto">Cargando...</div>
+  </div>
+
+  <script>
+    // Redirige después de 1 segundo
+    setTimeout(() => {
+      window.location.href = "frontend/templates/index.html"; // Cambia al HTML destino
+    }, 1000);
+  </script>
+</body>
+</html>

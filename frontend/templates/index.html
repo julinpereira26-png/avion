@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Booking-plane • Interfaces</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    }
+
+    .seat {
+      inline-size: 36px;
+      block-size: 36px;
+      border-radius: .5rem;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      border: 2px solid #11182720;
+      background: #e5e7eb;
+      transition: transform .08s ease, box-shadow .08s ease;
+    }
+
+    .seat[data-state="occupied"] {
+      background: #ef4444;
+      color: white;
+      cursor: not-allowed;
+    }
+
+    .seat[data-state="blocked"] {
+      background: #9ca3af;
+      color: white;
+      cursor: not-allowed;
+    }
+
+    .seat[data-state="selected"] {
+      background: #22c55e;
+      color: white;
+    }
+
+    .seat:active {
+      transform: scale(.96);
+    }
+
+    .seat input {
+      display: none;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+<body class="bg-gray-50 text-gray-800 ">
+  <header class="bg-white shadow sticky top-0 z-20">
+    <nav class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+      <!-- LOGO -->
+      <div class="flex items-center gap-3">
+        <span class="font-bold text-2xl text-indigo-700 tracking-tight">Booking Plane</span>
+      </div>
+
+      <!-- NAV LINKS -->
+      <ul class="hidden md:flex items-center gap-8 font-medium text-gray-700">
+        <li><a href="#" class="hover:text-indigo-600 transition">Inicio</a></li>
+        <li><a href="#contactanos" id="btnContact" class="hover:text-indigo-600 transition">Contáctanos</a></li>
+        <li><a href="#" id="btnTerminos" class="hover:text-indigo-600 transition">Términos y Condiciones</a></li>
+      </ul>
+
+      <!-- BOTONES -->
+      <div class="flex items-center gap-3">
+        <a href="/frontend/templates/check.html">
+          <button
+            class="rounded-xl border border-indigo-600 text-indigo-600 px-4 py-2 text-sm hover:bg-indigo-50 transition">
+            Verificar check-in
+          </button>
+        </a>
+        <a href="/frontend/templates/admin/index.html">
+          <button class="rounded-xl bg-indigo-600 text-white px-4 py-2 text-sm hover:bg-indigo-700 transition">
+            Iniciar sesión
+          </button>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+
+  <main class="mx-auto max-w-6xl px-4 py-8 space-y-10">
+
+    <!-- BUSCADOR -->
+    <section class="bg-white rounded-2xl shadow p-5">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-semibold text-lg">Buscar vuelos</h2>
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-gray-600">ida y vuelta</span>
+          <label class="inline-flex items-center cursor-pointer">
+            <input id="idaVuelta" type="checkbox" class="sr-only peer" checked>
+            <div class="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-indigo-600 transition"></div>
+            <span class="ml-2 text-sm"></span>
+          </label>
+        </div>
+      </div>
+
+      <form class="grid grid-cols-1 md:grid-cols-6 gap-3">
+        <select class="form-control" id="origen">
+          <option value="">origen</option>
+          <option value="Arauca">Arauca</option>
+          <option value="Armenia">Armenia</option>
+          <option value="Barranquilla">Barranquilla</option>
+          <option value="Bogotá">Bogotá</option>
+          <option value="Bucaramanga">Bucaramanga</option>
+          <option value="Cali">Cali</option>
+          <option value="Cartagena">Cartagena</option>
+          <option value="Cúcuta">Cúcuta</option>
+          <option value="Florencia">Florencia</option>
+          <option value="Ibagué">Ibagué</option>
+          <option value="Leticia">Leticia</option>
+          <option value="Manizales">Manizales</option>
+          <option value="Medellín">Medellín</option>
+          <option value="Mitú">Mitú</option>
+          <option value="Mocoa">Mocoa</option>
+          <option value="Montería">Montería</option>
+          <option value="Neiva">Neiva</option>
+          <option value="Pasto">Pasto</option>
+          <option value="Pereira">Pereira</option>
+          <option value="Popayán">Popayán</option>
+          <option value="Puerto Carreño">Puerto Carreño</option>
+          <option value="Puerto Inírida">Puerto Inírida</option>
+          <option value="Quibdó">Quibdó</option>
+          <option value="Riohacha">Riohacha</option>
+          <option value="San Andrés">San Andrés</option>
+          <option value="San José del Guaviare">San José del Guaviare</option>
+          <option value="Santa Marta">Santa Marta</option>
+          <option value="Sincelejo">Sincelejo</option>
+          <option value="Tunja">Tunja</option>
+          <option value="Valledupar">Valledupar</option>
+          <option value="Villavicencio">Villavicencio</option>
+          <option value="Yopal">Yopal</option>
+          <option value="Tumaco">Tumaco</option>
+          <option value="Apartadó">Apartadó</option>
+          <option value="Buenaventura">Buenaventura</option>
+        </select>
+
+        <select class="form-control" id="destino">
+          <option value="">destino</option>
+          <option value="Arauca">Arauca</option>
+          <option value="Armenia">Armenia</option>
+          <option value="Barranquilla">Barranquilla</option>
+          <option value="Bogotá">Bogotá</option>
+          <option value="Bucaramanga">Bucaramanga</option>
+          <option value="Cali">Cali</option>
+          <option value="Cartagena">Cartagena</option>
+          <option value="Cúcuta">Cúcuta</option>
+          <option value="Florencia">Florencia</option>
+          <option value="Ibagué">Ibagué</option>
+          <option value="Leticia">Leticia</option>
+          <option value="Manizales">Manizales</option>
+          <option value="Medellín">Medellín</option>
+          <option value="Mitú">Mitú</option>
+          <option value="Mocoa">Mocoa</option>
+          <option value="Montería">Montería</option>
+          <option value="Neiva">Neiva</option>
+          <option value="Pasto">Pasto</option>
+          <option value="Pereira">Pereira</option>
+          <option value="Popayán">Popayán</option>
+          <option value="Puerto Carreño">Puerto Carreño</option>
+          <option value="Puerto Inírida">Puerto Inírida</option>
+          <option value="Quibdó">Quibdó</option>
+          <option value="Riohacha">Riohacha</option>
+          <option value="San Andrés">San Andrés</option>
+          <option value="San José del Guaviare">San José del Guaviare</option>
+          <option value="Santa Marta">Santa Marta</option>
+          <option value="Sincelejo">Sincelejo</option>
+          <option value="Tunja">Tunja</option>
+          <option value="Valledupar">Valledupar</option>
+          <option value="Villavicencio">Villavicencio</option>
+          <option value="Yopal">Yopal</option>
+          <option value="Tumaco">Tumaco</option>
+          <option value="Apartadó">Apartadó</option>
+          <option value="Buenaventura">Buenaventura</option>
+        </select>
+
+        <input class="md:col-span-1 rounded-xl border px-3 py-2" id="fecha" type="date" placeholder="Ida" />
+        <input class="md:col-span-1 rounded-xl border px-3 py-2" type="date" placeholder="Vuelta" id="vueltaInput" />
+        <div class="md:col-span-1 flex rounded-xl border overflow-hidden">
+          <input class="w-full px-3 py-2 outline-none" type="number" min="1" value="1" aria-label="N. personas">
+          <span class="px-3 py-2 bg-gray-100 text-sm grid place-items-center border-l">Personas</span>
+        </div>
+        <button id="btnbuscar" type="button"
+          class="md:col-span-1 rounded-xl bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700 transition">Buscar</button>
+      </form>
+    </section>
+
+    <!-- ViELOS ACTIVOS -->
+    <section class="bg-white rounded-2xl shadow p-5">
+      <h3 class="font-semibold text-lg mb-4 text-center">Vuelos activos</h3>
+      <div id="vuelos-container" class="grid grid-cols-1 overflow--scroll  md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <!-- Tarjeta de vuelo -->
+        <!-- <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col gap-3 hover:shadow-md transition">
+        <div class="flex items-center gap-2 text-sm text-gray-600"><span class="text-indigo-600 font-bold">✈</span> Vuelo #1</div>
+        <div class="flex justify-between items-center gap-2">
+          <div>
+            <p class="text-sm font-medium text-gray-800">Origen</p>
+            <p class="text-gray-600">Bogotá</p>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-800">Destino</p>
+            <p class="text-gray-600">Medellín</p>
+          </div>
+        </div>
+        <div class="flex justify-between items-center gap-2">
+          <div>
+            <p class="text-sm font-medium text-gray-800">Fecha</p>
+            <p class="text-gray-600">2025-10-25</p>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-800">Hora</p>
+            <p class="text-gray-600">09:00</p>
+          </div>
+        </div>
+        <div class="flex justify-between items-center gap-2">
+          <div>
+            <p class="text-sm font-medium text-gray-800">Capacidad</p>
+            <p class="text-gray-600">72 asientos</p>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-800">Precio</p>
+            <p class="text-gray-600">$350.000</p>
+          </div>
+        </div>
+        <button class="mt-2 w-full rounded-xl bg-emerald-600 text-white py-2 hover:bg-emerald-700 transition">Reservar</button>
+      </div>
+
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col gap-3 hover:shadow-md transition">
+        <div class="flex items-center gap-2 text-sm text-gray-600"><span class="text-indigo-600 font-bold">✈</span> Vuelo #2</div>
+        <div class="flex justify-between items-center gap-2">
+          <div>
+            <p class="text-sm font-medium text-gray-800">Origen</p>
+            <p class="text-gray-600">Cali</p>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-800">Destino</p>
+            <p class="text-gray-600">Cartagena</p>
+          </div>
+        </div>
+        <div class="flex justify-between items-center gap-2">
+          <div>
+            <p class="text-sm font-medium text-gray-800">Fecha</p>
+            <p class="text-gray-600">2025-10-25</p>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-800">Hora</p>
+            <p class="text-gray-600">12:30</p>
+          </div>
+        </div>
+        <div class="flex justify-between items-center gap-2">
+          <div>
+            <p class="text-sm font-medium text-gray-800">Capacidad</p>
+            <p class="text-gray-600">60 asientos</p>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-800">Precio</p>
+            <p class="text-gray-600">$320.000</p>
+          </div>
+        </div>
+        <button class="mt-2 w-full rounded-xl bg-emerald-600 text-white py-2 hover:bg-emerald-700 transition">Reservar</button>
+      </div> -->
+
+      </div>
+    </section>
+
+  </main>
+<footer id="contactanos" class="bg-neutral-900 text-gray-300 mt-16">
+  <!-- Sección de suscripción -->
+  <div class="max-w-7xl mx-auto px-6 py-10 text-center border-b border-gray-700">
+    <h3 class="text-lg font-semibold mb-2 text-white">¿Buscas ofertas exclusivas?</h3>
+    <p class="text-sm mb-5 text-gray-400">Suscríbete y recibe promociones y novedades directamente en tu correo.</p>
+    <div class="flex flex-col sm:flex-row justify-center items-center gap-3 max-w-md mx-auto">
+      <input type="email" placeholder="correo@ejemplo.com"
+        class="w-full px-4 py-2 rounded-full outline-none border border-gray-600 bg-neutral-800 text-white placeholder-gray-500 focus:ring focus:ring-indigo-500">
+      <button
+        class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-full transition">Suscribirme</button>
+    </div>
+    <p class="text-xs text-gray-500 mt-3">
+      Al suscribirte aceptas nuestra <a href="#" class="text-indigo-400 hover:underline">Política de privacidad</a>.
+    </p>
+  </div>
+
+  <!-- Sección principal de enlaces -->
+  <div class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-10 text-sm">
+    <div>
+      <h4 class="text-white font-semibold mb-3">Descubre y compra</h4>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:text-white">Vuelos baratos</a></li>
+        <li><a href="#" class="hover:text-white">Reservas de hoteles</a></li>
+        <li><a href="#" class="hover:text-white">Alquiler de autos</a></li>
+        <li><a href="#" class="hover:text-white">Tours y excursiones</a></li>
+        <li><a href="#" class="hover:text-white">Asistencia en viaje</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="text-white font-semibold mb-3">Sobre nosotros</h4>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:text-white">Quiénes somos</a></li>
+        <li><a href="#" class="hover:text-white">Trabaja con nosotros</a></li>
+        <li><a href="#" class="hover:text-white">Noticias</a></li>
+        <li><a href="#" class="hover:text-white">Alianzas y beneficios</a></li>
+        <li><a href="#" class="hover:text-white">Sostenibilidad</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="text-white font-semibold mb-3">Nuestros portales</h4>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:text-white">Programa de fidelización</a></li>
+        <li><a href="#" class="hover:text-white">Empresas</a></li>
+        <li><a href="#" class="hover:text-white">Carga aérea</a></li>
+        <li><a href="#" class="hover:text-white">Relación con inversores</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="text-white font-semibold mb-3">Enlaces rápidos</h4>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:text-white">Información legal</a></li>
+        <li><a href="#" class="hover:text-white">Política de privacidad</a></li>
+        <li><a href="#" class="hover:text-white">Condiciones del servicio</a></li>
+        <li><a href="#" class="hover:text-white">Contáctanos</a></li>
+        <li><a href="#" class="hover:text-white">Cambios y reembolsos</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Redes sociales -->
+  <div class="border-t border-gray-700 py-6 text-center">
+    <p class="text-sm text-gray-500 mb-3">Sígueme en redes</p>
+    <p class="text-sm text-gray-500 mb-3">cristhian de jesus utria palacio</p>
+    <div class="flex justify-center space-x-5">
+      <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+      <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
+    </div>
+    <p class="text-xs text-gray-600 mt-4">© 2025 Booking Plane. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+
+</body>
+  <script src="/frontend/js/app.js"></script>
+  <script>
+    const fechaInput = document.getElementById('fecha');
+    const hoy = new Date();
+
+    // Formateamos la fecha como YYYY-MM-DD
+    const yyyy = hoy.getFullYear();
+    const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+    const dd = String(hoy.getDate()).padStart(2, '0');
+    const fechaHoy = `${yyyy}-${mm}-${dd}`;
+
+
+    const fechaMax = new Date(hoy);
+    fechaMax.setMonth(fechaMax.getMonth() + 2);
+    const yyyyMax = fechaMax.getFullYear();
+    const mmMax = String(fechaMax.getMonth() + 1).padStart(2, '0');
+    const ddMax = String(fechaMax.getDate()).padStart(2, '0');
+    const fechaMaxima = `${yyyyMax}-${mmMax}-${ddMax}`;
+
+    // Asignamos los límites al input
+    fechaInput.min = fechaHoy;
+    fechaInput.max = fechaMaxima;
+    const idaVuelta = document.getElementById('idaVuelta');
+    const vueltaInput = document.getElementById('vueltaInput');
+    function syncVuelta() { vueltaInput.disabled = !idaVuelta.checked; vueltaInput.classList.toggle('opacity-50', vueltaInput.disabled); }
+    idaVuelta.addEventListener('change', syncVuelta); syncVuelta();
+    cargarVuelos();
+    const buscarBtn = document.querySelector('button[type="button"]');
+    const vuelosContainer = document.getElementById('vuelos-container');
+
+    buscarBtn.addEventListener('click', async () => {
+      const selects = document.querySelectorAll('select.form-control');
+      const origen = selects[0].value;
+      const destino = selects[1].value;
+      const fecha = document.getElementById('fecha').value;
+
+      if (!origen || !destino || !fecha) {
+        Swal.fire('Error', 'Debes seleccionar origen, destino y fecha', 'error');
+        return;
+      }
+
+      try {
+        // Llamada a la API de vuelos
+        const res = await fetch('http://127.0.0.1:5000/api/vuelos');
+
+        const vuelos = await res.json();
+
+        // Filtrar vuelos por criterios
+        const vuelosFiltrados = vuelos.filter(v =>
+          v.origen === origen &&
+          v.destino === destino &&
+          v.fecha.startsWith(fecha) // compara solo la fecha YYYY-MM-DD
+        );
+
+        // Limpiar contenedor
+        vuelosContainer.innerHTML = '';
+
+        if (vuelosFiltrados.length === 0) {
+          vuelosContainer.innerHTML = `<p class="col-span-full text-center text-gray-500">No se encontraron vuelos para estos criterios.</p>`;
+          return;
+        }
+
+        // Renderizar tarjetas
+        vuelosFiltrados.forEach(v => {
+          const tarjeta = document.createElement('div');
+          tarjeta.className = 'bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col gap-3 hover:shadow-md transition';
+          tarjeta.innerHTML = `
+                <div class="flex items-center gap-2 text-sm text-gray-600"><span class="text-indigo-600 font-bold">✈</span> Vuelo #${v.id_vuelo}</div>
+                <div class="flex justify-between items-center gap-2">
+                  <div>
+                    <p class="text-sm font-medium text-gray-800">Origen</p>
+                    <p class="text-gray-600">${v.origen}</p>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-800">Destino</p>
+                    <p class="text-gray-600">${v.destino}</p>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center gap-2">
+                  <div>
+                    <p class="text-sm font-medium text-gray-800">Fecha</p>
+                    <p class="text-gray-600">${v.fecha.split('T')[0]}</p>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-800">Hora</p>
+                    <p class="text-gray-600">${v.fecha.split('T')[1]?.slice(0, 5) || '00:00'}</p>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center gap-2">
+                  <div>
+                    <p class="text-sm font-medium text-gray-800">Precio</p>
+                    <p class="text-gray-600">$${v.precio}</p>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-800">Capacidad</p>
+                    <p class="text-gray-600">${v.total_asientos || 'N/A'} asientos</p>
+                  </div>
+                </div>
+                <button class="mt-2 w-full rounded-xl bg-emerald-600 text-white py-2 hover:bg-emerald-700 transition">Reservar</button>
+            `;
+          vuelosContainer.appendChild(tarjeta);
+        });
+
+      } catch (err) {
+        console.error(err);
+        Swal.fire('Error', 'No se pudieron cargar los vuelos', 'error');
+      }
+    });
+    const btnBuscar = document.getElementById("btnBuscar");
+    const contenedorVuelos = document.getElementById("vuelos-container");
+
+    btnBuscar.addEventListener("click", async () => {
+      const origen = document.getElementById("origen").value;
+      const destino = document.getElementById("destino").value;
+
+      // Llamada al backend
+      const res = await fetch(`http://127.0.0.1:5000/api/vuelos/filtro?origen=${origen}&destino=${destino}`);
+      const vuelos = await res.json();
+
+      // Limpiar resultados previos
+      contenedorVuelos.innerHTML = "";
+
+      if (vuelos.length === 0) {
+        contenedorVuelos.innerHTML = `<p class="text-center col-span-full">No se encontraron vuelos</p>`;
+        return;
+      }
+
+      // Mostrar vuelos
+      vuelos.forEach(vuelo => {
+        const div = document.createElement("div");
+        div.className = "bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col gap-3 hover:shadow-md transition";
+
+        div.innerHTML = `
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                <span class="text-indigo-600 font-bold">✈</span> Vuelo #${vuelo.id_vuelo}
+            </div>
+            <div class="flex justify-between items-center gap-2">
+                <div>
+                    <p class="text-sm font-medium text-gray-800">Origen</p>
+                    <p class="text-gray-600">${vuelo.origen}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-800">Destino</p>
+                    <p class="text-gray-600">${vuelo.destino}</p>
+                </div>
+            </div>
+            <div class="flex justify-between items-center gap-2">
+                <div>
+                    <p class="text-sm font-medium text-gray-800">Fecha</p>
+                    <p class="text-gray-600">${vuelo.fecha}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-800">Matricula</p>
+                    <p class="text-gray-600">${vuelo.matricula}</p>
+                </div>
+            </div>
+            <div class="flex justify-between items-center gap-2">
+                <div>
+                    <p class="text-sm font-medium text-gray-800">Modelo</p>
+                    <p class="text-gray-600">${vuelo.modelo}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-800">Precio</p>
+                    <p class="text-gray-600">$${vuelo.precio}</p>
+                </div>
+            </div>
+            <button class="mt-2 w-full rounded-xl bg-emerald-600 text-white py-2 hover:bg-emerald-700 transition">
+                Reservar
+            </button>
+        `;
+
+        contenedorVuelos.appendChild(div);
+      });
+    });
+    // --- MODAL CONTACTO ---
+const modalContact = document.getElementById('modalContact');
+const btnContact = document.getElementById('btnContact');
+const closeContact = document.getElementById('closeContact');
+
+btnContact.addEventListener('click', e => {
+  e.preventDefault();
+  modalContact.classList.remove('hidden');
+});
+closeContact.addEventListener('click', () => {
+  modalContact.classList.add('hidden');
+});
+modalContact.addEventListener('click', e => {
+  if (e.target === modalContact) modalContact.classList.add('hidden');
+});
+
+// --- MODAL TÉRMINOS ---
+const modalTerminos = document.getElementById('modalTerminos');
+const btnTerminos = document.getElementById('btnTerminos');
+const closeTerminos = document.getElementById('closeTerminos');
+
+btnTerminos.addEventListener('click', e => {
+  e.preventDefault();
+  modalTerminos.classList.remove('hidden');
+});
+closeTerminos.addEventListener('click', () => {
+  modalTerminos.classList.add('hidden');
+});
+modalTerminos.addEventListener('click', e => {
+  if (e.target === modalTerminos) modalTerminos.classList.add('hidden');
+});
+
+setInterval(actualizarVuelos, 5000);
+  </script>
+
+</html>
