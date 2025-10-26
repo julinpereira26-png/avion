@@ -5,136 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Formulario de Reserva</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-  <main class="mx-auto max-w-6xl px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-8">
+<main class="mx-auto max-w-6xl px-4 py-8">
+  <div class="flex flex-col lg:flex-row gap-8">
 
-      <!-- 🧍 Datos del Pasajero -->
-      <section class="bg-white rounded-2xl shadow-sm border p-5 flex-1 relative">
-        <div class="absolute top-4 right-5 text-sm font-semibold text-gray-600" id="contadorPasajeros">0/0</div>
+    <!-- 🧍 Datos del Pasajero -->
+    <section class="bg-white rounded-2xl shadow-sm border p-5 flex-1 relative">
+      <div class="absolute top-4 right-5 text-sm font-semibold text-gray-600" id="contadorPasajeros">0/0</div>
+      <h2 class="font-semibold text-lg mb-2">Datos del Pasajero</h2>
+      <p id="infoAsientos" class="text-sm text-gray-600 mb-4"></p>
 
-        <h2 class="font-semibold text-lg mb-2">Datos del Pasajero</h2>
-        <p id="infoAsientos" class="text-sm text-gray-600 mb-4"></p>
+      <form id="formPasajero" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div><label class="text-sm">Primer Apellido</label><input name="apellido1" class="mt-1 w-full rounded-xl border px-3 py-2" required /></div>
+        <div><label class="text-sm">Tipo Documento</label><select name="tipoDoc" class="mt-1 w-full rounded-xl border px-3 py-2" required><option value="">Selecciona...</option><option>CC</option><option>CE</option><option>TI</option></select></div>
+        <div><label class="text-sm">Segundo Apellido</label><input name="apellido2" class="mt-1 w-full rounded-xl border px-3 py-2" required /></div>
+        <div><label class="text-sm">Número Documento</label><input name="numDoc" class="mt-1 w-full rounded-xl border px-3 py-2" required /></div>
+        <div><label class="text-sm">Nombre(s)</label><input name="nombres" class="mt-1 w-full rounded-xl border px-3 py-2" required /></div>
+        <div><label class="text-sm">Celular</label><input name="celular" class="mt-1 w-full rounded-xl border px-3 py-2" type="tel" required /></div>
+        <div><label class="text-sm">Fecha de nacimiento</label><input name="fecha_nacimiento" type="date" class="mt-1 w-full rounded-xl border px-3 py-2" required /></div>
+        <div><label class="text-sm">Género</label><select name="genero" class="mt-1 w-full rounded-xl border px-3 py-2" required><option value="">Selecciona...</option><option value="M">Masculino</option><option value="F">Femenino</option><option value="O">Otro</option></select></div>
+        <div class="sm:col-span-2"><label class="text-sm">Correo</label><input name="correo" class="mt-1 w-full rounded-xl border px-3 py-2" type="email" required /></div>
+        <div class="sm:col-span-2 flex justify-end">
+          <button type="submit" class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition">Guardar pasajero</button>
+        </div>
+      </form>
+    </section>
 
-        <form id="formPasajero" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="text-sm">Primer Apellido</label>
-            <input name="apellido1" class="mt-1 w-full rounded-xl border px-3 py-2" required />
-          </div>
-          <div>
-            <label class="text-sm">Tipo Documento</label>
-            <select name="tipoDoc" class="mt-1 w-full rounded-xl border px-3 py-2" required>
-              <option value="">Selecciona...</option>
-              <option>CC</option><option>CE</option><option>TI</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-sm">Segundo Apellido</label>
-            <input name="apellido2" class="mt-1 w-full rounded-xl border px-3 py-2" required />
-          </div>
-          <div>
-            <label class="text-sm">Número Documento</label>
-            <input name="numDoc" class="mt-1 w-full rounded-xl border px-3 py-2" required />
-          </div>
-          <div>
-            <label class="text-sm">Nombre(s)</label>
-            <input name="nombres" class="mt-1 w-full rounded-xl border px-3 py-2" required />
-          </div>
-          <div>
-            <label class="text-sm">Celular</label>
-            <input name="celular" class="mt-1 w-full rounded-xl border px-3 py-2" type="tel" required />
-          </div>
+    <!-- 💳 Datos del Pagante -->
+    <section class="bg-white rounded-2xl shadow-sm border p-5 flex-1">
+      <h2 class="font-semibold text-lg mb-2">Datos del Pagante</h2>
+      <form id="formPagante" class="space-y-4">
+        <div><label class="text-sm">Nombre Completo</label><input name="nombre" class="mt-1 w-full rounded-xl border px-3 py-2" required /></div>
+        <div class="grid grid-cols-3 gap-3">
+          <div><label class="text-sm">Tipo Doc.</label><select name="tipoDoc" class="mt-1 w-full rounded-xl border px-3 py-2" required><option value="">Selecciona...</option><option>CC</option><option>CE</option></select></div>
+          <div class="col-span-2 flex items-end"><input name="numDoc" class="w-full rounded-xl border px-3 py-2" placeholder="Número" required /></div>
+        </div>
+        <div><label class="text-sm">Celular</label><input name="celular" class="mt-1 w-full rounded-xl border px-3 py-2" type="tel" required /></div>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="col-span-2"><label class="text-sm">Método de Pago</label><select name="metodo" class="mt-1 w-full rounded-xl border px-3 py-2" required><option value="">Selecciona...</option><option>Tarjeta débito</option><option>Tarjeta crédito</option><option>PSE</option></select></div>
+          <div class="flex items-end"><button type="button" id="btnPagar" onclick="confirmarPago()" disabled class="w-full rounded-xl bg-gray-400 text-white py-2 cursor-not-allowed transition">Pagar</button></div>
+        </div>
+        <label class="inline-flex items-center gap-2 text-sm"><input type="checkbox" id="checkTerminos" class="rounded border-gray-300" required><span>Acepto términos y condiciones</span></label>
+      </form>
+    </section>
 
-          <!-- 📅 Fecha de nacimiento -->
-          <div>
-            <label class="text-sm">Fecha de Nacimiento</label>
-            <input name="fecha_nacimiento" type="date" class="mt-1 w-full rounded-xl border px-3 py-2" required />
-          </div>
+  </div>
+</main>
 
-          <!-- ⚧ Género -->
-          <div>
-            <label class="text-sm">Género</label>
-            <select name="genero" class="mt-1 w-full rounded-xl border px-3 py-2" required>
-              <option value="">Selecciona...</option>
-              <option value="M">Masculino</option>
-              <option value="F">Femenino</option>
-              <option value="O">Otro</option>
-            </select>
-          </div>
-
-          <div class="sm:col-span-2">
-            <label class="text-sm">Correo</label>
-            <input name="correo" class="mt-1 w-full rounded-xl border px-3 py-2" type="email" required />
-          </div>
-
-          <div class="sm:col-span-2 flex justify-end">
-            <button type="submit"
-              class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition">
-              Guardar pasajero
-            </button>
-          </div>
-        </form>
-      </section>
-
-      <!-- 💳 Datos del Pagante -->
-      <section class="bg-white rounded-2xl shadow-sm border p-5 flex-1">
-        <h2 class="font-semibold text-lg mb-2">Datos del Pagante</h2>
-
-        <form id="formPagante" class="space-y-4">
-          <div>
-            <label class="text-sm">Nombre Completo</label>
-            <input name="nombre" class="mt-1 w-full rounded-xl border px-3 py-2" required />
-          </div>
-
-          <div class="grid grid-cols-3 gap-3">
-            <div>
-              <label class="text-sm">Tipo Doc.</label>
-              <select name="tipoDoc" class="mt-1 w-full rounded-xl border px-3 py-2" required>
-                <option value="">Selecciona...</option>
-                <option>CC</option><option>CE</option>
-              </select>
-            </div>
-            <div class="col-span-2 flex items-end">
-              <input name="numDoc" class="w-full rounded-xl border px-3 py-2" placeholder="Número" required />
-            </div>
-          </div>
-
-          <div>
-            <label class="text-sm">Celular</label>
-            <input name="celular" class="mt-1 w-full rounded-xl border px-3 py-2" type="tel" required />
-          </div>
-
-          <div class="grid grid-cols-3 gap-3">
-            <div class="col-span-2">
-              <label class="text-sm">Método de Pago</label>
-              <select name="metodo" class="mt-1 w-full rounded-xl border px-3 py-2" required>
-                <option value="">Selecciona...</option>
-                <option>Tarjeta débito</option>
-                <option>Tarjeta crédito</option>
-                <option>PSE</option>
-              </select>
-            </div>
-            <div class="flex items-end">
-              <button type="button" id="btnPagar" onclick="confirmarPago()" disabled
-                class="w-full rounded-xl bg-gray-400 text-white py-2 cursor-not-allowed transition">
-                Pagar
-              </button>
-            </div>
-          </div>
-
-          <label class="inline-flex items-center gap-2 text-sm">
-            <input type="checkbox" id="checkTerminos" class="rounded border-gray-300" required>
-            <span>Acepto términos y condiciones</span>
-          </label>
-        </form>
-      </section>
-    </div>
-  </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+const url = "https://wait-demand-remedies-covers.trycloudflare.com"; // tu túnel Cloudflare
+
 const info = document.getElementById("infoAsientos");
 const contador = document.getElementById("contadorPasajeros");
 const btnPagar = document.getElementById("btnPagar");
@@ -208,8 +131,7 @@ async function confirmarPago() {
   };
 
   try {
-
-    const resReserva = await fetch(`http://127.0.0.1:5000/vuelo/${id_vuelo}/reservar`, {
+    const resReserva = await fetch(`${url}/vuelo/${id_vuelo}/reservar`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(bodyReserva)
@@ -218,7 +140,7 @@ async function confirmarPago() {
     if (!resReserva.ok) throw new Error(dataReserva.error || "Error al crear reserva");
     const codigo_reserva = dataReserva.codigo_reserva;
 
-    const resPago = await fetch(`http://127.0.0.1:5000/pago/${codigo_reserva}`, {
+    const resPago = await fetch(`${url}/pago/${codigo_reserva}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ metodo: pagante.metodo || "TARJETA" })
@@ -226,28 +148,34 @@ async function confirmarPago() {
     const dataPago = await resPago.json();
     if (!resPago.ok) throw new Error(dataPago.error || "Error al procesar pago");
 
-Swal.fire({
-  title: "¡Pago exitoso!",
-  html: `Código de reserva: <b>${codigo_reserva}</b><br>Total: <b>$${dataPago.monto}</b>`,
-  icon: "success",
-  showCancelButton: true,
-  confirmButtonText: "Descargar tiquete",
-  cancelButtonText: "Cerrar"
-}).then(result => {
-  if (result.isConfirmed) {
-    // Descargar el tiquete solo si el usuario lo confirma
-    const link = document.createElement("a");
-    link.href = `http://127.0.0.1:5000/tiquete/${codigo_reserva}`;
-    link.download = `tiquete_${codigo_reserva}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
+    Swal.fire({
+      title: "¡Pago exitoso!",
+      html: `Código de reserva: <b>${codigo_reserva}</b><br>Total: <b>$${dataPago.monto}</b>`,
+      icon: "success",
+      showCancelButton: true,
+      confirmButtonText: "Descargar tiquete",
+      cancelButtonText: "Cerrar"
+    }).then(async result => {
+      if (result.isConfirmed) {
+        try {
+          const resTiq = await fetch(`${url}/tiquete/${codigo_reserva}`);
+          if (!resTiq.ok) throw new Error("No se pudo descargar el tiquete");
+          const blob = await resTiq.blob();
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = `tiquete_${codigo_reserva}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(link.href);
+        } catch (e) {
+          Swal.fire("Error", e.message, "error");
+        }
+      }
 
-  // Limpiar y redirigir después de cualquier acción
-  localStorage.clear();
-  window.location.href = "index.html";
-});
+      localStorage.clear();
+      window.location.href = "index.html";
+    });
 
   } catch (err) {
     console.error(err);

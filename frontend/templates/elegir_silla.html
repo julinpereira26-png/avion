@@ -77,108 +77,109 @@
     </div>
   </main>
 
-  <script>
-    const MAX = 5;
-    const vueloId = localStorage.getItem("id_vuelo");
-    let seats = [];
-    let seleccionados = [];
+<script>
+const url = "https://wait-demand-remedies-covers.trycloudflare.com"; // tu túnel Cloudflare
+const MAX = 5;
+const vueloId = localStorage.getItem("id_vuelo");
+let seats = [];
+let seleccionados = [];
 
-    async function cargarAsientos() {
-      const res = await fetch(`http://127.0.0.1:5000/vuelo/${vueloId}/asientos`);
-      const data = await res.json();
-      seats = data.asientos;
+async function cargarAsientos() {
+  const res = await fetch(`${url}/vuelo/${vueloId}/asientos`);
+  const data = await res.json();
+  seats = data.asientos;
 
-      const contenedor = document.getElementById("asientosContainer");
-      contenedor.innerHTML = "";
+  const contenedor = document.getElementById("asientosContainer");
+  contenedor.innerHTML = "";
 
-      const filas = {};
-      seats.forEach(a => {
-        const filaNum = a.nombre_asiento.match(/\d+/)[0];
-        if (!filas[filaNum]) filas[filaNum] = [];
-        filas[filaNum].push(a);
-      });
+  const filas = {};
+  seats.forEach(a => {
+    const filaNum = a.nombre_asiento.match(/\d+/)[0];
+    if (!filas[filaNum]) filas[filaNum] = [];
+    filas[filaNum].push(a);
+  });
 
-      Object.keys(filas).forEach(num => {
-        const filaDiv = document.createElement("div");
-        filaDiv.className = "grid grid-cols-7 gap-2 items-center";
+  Object.keys(filas).forEach(num => {
+    const filaDiv = document.createElement("div");
+    filaDiv.className = "grid grid-cols-7 gap-2 items-center";
 
-        const label = document.createElement("div");
-        label.textContent = num;
-        label.className = "text-sm font-medium text-gray-600 text-center";
-        filaDiv.appendChild(label);
+    const label = document.createElement("div");
+    label.textContent = num;
+    label.className = "text-sm font-medium text-gray-600 text-center";
+    filaDiv.appendChild(label);
 
-        filas[num].forEach(a => {
-          const btn = document.createElement("button");
-          btn.className = "seat";
-          btn.dataset.state = a.estado;
-          if (a.estado === "RESERVADO") btn.textContent = "✖";
+    filas[num].forEach(a => {
+      const btn = document.createElement("button");
+      btn.className = "seat";
+      btn.dataset.state = a.estado;
+      if (a.estado === "RESERVADO") btn.textContent = "✖";
 
-          btn.addEventListener("click", () => seleccionarAsiento(btn, a));
-          filaDiv.appendChild(btn);
-        });
-
-        contenedor.appendChild(filaDiv);
-      });
-
-      actualizarContador();
-    }
-
-    function seleccionarAsiento(btn, asiento) {
-      if (asiento.estado === "RESERVADO" || asiento.estado === "BLOQUEADO") return;
-
-      if (btn.dataset.state === "SELECCIONADO") {
-        btn.dataset.state = "DISPONIBLE";
-        btn.textContent = "";
-        seleccionados = seleccionados.filter(s => s !== asiento.nombre_asiento);
-      } else {
-        if (seleccionados.length >= MAX) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Máximo alcanzado',
-            text: `Solo puedes seleccionar hasta ${MAX} asientos`
-          });
-          return;
-        }
-        btn.dataset.state = "SELECCIONADO";
-        btn.textContent = "👤";
-        seleccionados.push(asiento.nombre_asiento);
-      }
-
-      actualizarContador();
-    }
-
-    function actualizarContador() {
-      document.getElementById("counter").innerHTML =
-        `máximo <b>${MAX}</b> personas — seleccionados: <b>${seleccionados.length}</b>`;
-      const lista = document.getElementById("listaSeleccionados");
-      lista.innerHTML = seleccionados.map(s => `<li>${s}</li>`).join("");
-    }
-
-    document.getElementById("confirm").addEventListener("click", () => {
-      if (seleccionados.length === 0) {
-        Swal.fire({
-          icon: 'info',
-          title: 'Atención',
-          text: 'Selecciona al menos un asiento'
-        });
-        return;
-      }
-
-      localStorage.setItem("asientosSeleccionados", JSON.stringify(seleccionados));
-      localStorage.setItem("cantidadPasajeros", seleccionados.length);
-      localStorage.setItem("id_vuelo", vueloId);
-
-      Swal.fire({
-        icon: 'success',
-        title: '¡Asientos seleccionados!',
-        html: `Se seleccionaron <b>${seleccionados.length}</b> asiento(s):<br>${seleccionados.join(", ")}`,
-        confirmButtonText: 'Continuar'
-      }).then(() => {
-        window.location.href = "formulario.html";
-      });
+      btn.addEventListener("click", () => seleccionarAsiento(btn, a));
+      filaDiv.appendChild(btn);
     });
 
-    window.onload = cargarAsientos;
-  </script>
+    contenedor.appendChild(filaDiv);
+  });
+
+  actualizarContador();
+}
+
+function seleccionarAsiento(btn, asiento) {
+  if (asiento.estado === "RESERVADO" || asiento.estado === "BLOQUEADO") return;
+
+  if (btn.dataset.state === "SELECCIONADO") {
+    btn.dataset.state = "DISPONIBLE";
+    btn.textContent = "";
+    seleccionados = seleccionados.filter(s => s !== asiento.nombre_asiento);
+  } else {
+    if (seleccionados.length >= MAX) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Máximo alcanzado',
+        text: `Solo puedes seleccionar hasta ${MAX} asientos`
+      });
+      return;
+    }
+    btn.dataset.state = "SELECCIONADO";
+    btn.textContent = "👤";
+    seleccionados.push(asiento.nombre_asiento);
+  }
+
+  actualizarContador();
+}
+
+function actualizarContador() {
+  document.getElementById("counter").innerHTML =
+    `máximo <b>${MAX}</b> personas — seleccionados: <b>${seleccionados.length}</b>`;
+  const lista = document.getElementById("listaSeleccionados");
+  lista.innerHTML = seleccionados.map(s => `<li>${s}</li>`).join("");
+}
+
+document.getElementById("confirm").addEventListener("click", () => {
+  if (seleccionados.length === 0) {
+    Swal.fire({
+      icon: 'info',
+      title: 'Atención',
+      text: 'Selecciona al menos un asiento'
+    });
+    return;
+  }
+
+  localStorage.setItem("asientosSeleccionados", JSON.stringify(seleccionados));
+  localStorage.setItem("cantidadPasajeros", seleccionados.length);
+  localStorage.setItem("id_vuelo", vueloId);
+
+  Swal.fire({
+    icon: 'success',
+    title: '¡Asientos seleccionados!',
+    html: `Se seleccionaron <b>${seleccionados.length}</b> asiento(s):<br>${seleccionados.join(", ")}`,
+    confirmButtonText: 'Continuar'
+  }).then(() => {
+    window.location.href = "formulario.html";
+  });
+});
+
+window.onload = cargarAsientos;
+</script>
 </body>
 </html>

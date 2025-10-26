@@ -82,76 +82,77 @@
   </footer>
 
   <!-- JS para conectar con Flask -->
-  <script>
-    const API_URL = "http://127.0.0.1:5000";
+<script>
+  const url = "https://wait-demand-remedies-covers.trycloudflare.com"; // tu túnel Cloudflare
 
-    document.getElementById("checkinForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const codigo = document.getElementById("codigo").value.trim();
-      const documento = document.getElementById("documento").value.trim();
+  document.getElementById("checkinForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const codigo = document.getElementById("codigo").value.trim();
+    const documento = document.getElementById("documento").value.trim();
 
-      if (!codigo && !documento) {
-        Swal.fire("Error", "Debes ingresar el código o el documento", "error");
-        return;
-      }
+    if (!codigo && !documento) {
+      Swal.fire("Error", "Debes ingresar el código o el documento", "error");
+      return;
+    }
 
-      try {
-        const res = await fetch(`${API_URL}/checkin/buscar`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ codigo, documento })
-        });
-        const data = await res.json();
-        if (!res.ok) throw data;
+    try {
+      const res = await fetch(`${url}/checkin/buscar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codigo, documento })
+      });
+      const data = await res.json();
+      if (!res.ok) throw data;
 
-        const pasajeros = data.pasajeros
-          .map(p => `${p.nombres} ${p.primer_apellido} ${p.segundo_apellido} — Asiento ${p.nombre_asiento}`)
-          .join("<br>");
+      const pasajeros = data.pasajeros
+        .map(p => `${p.nombres} ${p.primer_apellido} ${p.segundo_apellido} — Asiento ${p.nombre_asiento}`)
+        .join("<br>");
 
-        Swal.fire({
-          title: "Reserva encontrada",
-          html: `
-            <div class='text-left text-sm'>
-              <b>Código:</b> ${data.codigo_reserva}<br>
-              <b>Vuelo:</b> ${data.origen} → ${data.destino}<br>
-              <b>Fecha:</b> ${data.fecha}<br><hr class="my-2">
-              <b>Pasajeros:</b><br>${pasajeros}
-            </div>
-          `,
-          icon: "info",
-          showCancelButton: true,
-          confirmButtonText: "Confirmar Check-in",
-          cancelButtonText: "Cancelar",
-          confirmButtonColor: "#2563eb"
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            const confirmRes = await fetch(`${API_URL}/checkin/confirmar`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ codigo_reserva: data.codigo_reserva })
-            });
-            const confirmData = await confirmRes.json();
-            if (!confirmRes.ok) throw confirmData;
+      Swal.fire({
+        title: "Reserva encontrada",
+        html: `
+          <div class='text-left text-sm'>
+            <b>Código:</b> ${data.codigo_reserva}<br>
+            <b>Vuelo:</b> ${data.origen} → ${data.destino}<br>
+            <b>Fecha:</b> ${data.fecha}<br><hr class="my-2">
+            <b>Pasajeros:</b><br>${pasajeros}
+          </div>
+        `,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "Confirmar Check-in",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#2563eb"
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const confirmRes = await fetch(`${url}/checkin/confirmar`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ codigo_reserva: data.codigo_reserva })
+          });
+          const confirmData = await confirmRes.json();
+          if (!confirmRes.ok) throw confirmData;
 
-            Swal.fire({
-              title: "Check-in exitoso",
-              text: "Tu check-in ha sido completado. Se descargará tu tarjeta de embarque.",
-              icon: "success",
-              timer: 3000,
-              showConfirmButton: false
-            });
+          Swal.fire({
+            title: "Check-in exitoso",
+            text: "Tu check-in ha sido completado. Se descargará tu tarjeta de embarque.",
+            icon: "success",
+            timer: 3000,
+            showConfirmButton: false
+          });
 
-            // Descargar PDF
-            setTimeout(() => {
-              window.location.href = `${API_URL}/checkin/pdf/${data.codigo_reserva}`;
-            }, 2500);
-          }
-        });
+          // Descargar PDF
+          setTimeout(() => {
+            window.location.href = `${url}/checkin/pdf/${data.codigo_reserva}`;
+          }, 2500);
+        }
+      });
 
-      } catch (error) {
-        Swal.fire("Error", error.error || "No se pudo procesar el check-in", "error");
-      }
-    });
-  </script>
+    } catch (error) {
+      Swal.fire("Error", error.error || "No se pudo procesar el check-in", "error");
+    }
+  });
+</script>
+
 </body>
 </html>

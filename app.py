@@ -16,7 +16,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-
+url ="https://quality-join-vancouver-enlargement.trycloudflare.com"
 
 DB_CONFIG = {
     "host": "localhost",
@@ -437,7 +437,8 @@ def generar_pdf(codigo_reserva):
     vuelo = reserva["vuelo"]
 
     # Generar QR con link del panel admin
-    qr_url = f"http://127.0.0.1:5500/frontend/templates/admin/admin_checkin.html?codigo={codigo_reserva}"
+    # http://127.0.0.1:5500/frontend/templates/admin/admin_checkin.html
+    qr_url = f"{url}/frontend/templates/admin/admin_checkin.html?codigo={codigo_reserva}"
     qr_img = qrcode.make(qr_url)
     tmp_dir = tempfile.gettempdir()
     qr_path = f"{tmp_dir}/{codigo_reserva}.png"
@@ -468,25 +469,32 @@ def generar_pdf(codigo_reserva):
     pdf.save()
     buffer.seek(0)
 
-    return send_file(buffer, as_attachment=True, download_name=f"{codigo_reserva}.pdf", mimetype="application/pdf")
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name=f"{codigo_reserva}.pdf",
+        mimetype="application/pdf",
+        conditional=False
+    )
+
     # Generar QR
-    qr_img = qrcode.make(f"Código de reserva: {codigo_reserva}")
-    qr_path = f"{tempfile.gettempdir()}/{codigo_reserva}.png"
-    qr_img.save(qr_path)
+    # qr_img = qrcode.make(f"Código de reserva: {codigo_reserva}")
+    # qr_path = f"{tempfile.gettempdir()}/{codigo_reserva}.png"
+    # qr_img.save(qr_path)
 
-    buffer = io.BytesIO()
-    p = canvas.Canvas(buffer, pagesize=letter)
-    p.setFont("Helvetica-Bold", 16)
-    p.drawString(200, 750, "Tarjeta de Embarque - Booking Plane")
-    p.setFont("Helvetica", 12)
-    p.drawString(100, 700, f"Código de reserva: {codigo_reserva}")
-    p.drawImage(qr_path, 400, 650, width=100, height=100)
-    p.save()
+    # buffer = io.BytesIO()
+    # p = canvas.Canvas(buffer, pagesize=letter)
+    # p.setFont("Helvetica-Bold", 16)
+    # p.drawString(200, 750, "Tarjeta de Embarque - Booking Plane")
+    # p.setFont("Helvetica", 12)
+    # p.drawString(100, 700, f"Código de reserva: {codigo_reserva}")
+    # p.drawImage(qr_path, 400, 650, width=100, height=100)
+    # p.save()
 
-    buffer.seek(0)
-    return send_file(buffer, as_attachment=True,
-                     download_name=f"{codigo_reserva}_checkin.pdf",
-                     mimetype="application/pdf")
+    # buffer.seek(0)
+    # return send_file(buffer, as_attachment=True,
+    #                  download_name=f"{codigo_reserva}_checkin.pdf",
+    #                  mimetype="application/pdf")
 # Confirmar check-in
 @app.route("/checkin/confirmar", methods=["POST"])
 def confirmar_checkin():

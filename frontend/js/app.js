@@ -1,9 +1,12 @@
+const url = "https://wait-demand-remedies-covers.trycloudflare.com";
+       
+       
        async function cargarVuelos() {
             const container = document.getElementById('vuelos-container');
             container.innerHTML = 'Cargando vuelos...';
 
             try {
-                const res = await fetch('http://127.0.0.1:5000/vuelos'); // Ajusta tu URL si cambia
+                const res = await fetch(`${url}/vuelos`); 
                 const data = await res.json();
 
                 if (!data.vuelos || data.vuelos.length === 0) {
@@ -70,7 +73,7 @@ const vueloId = localStorage.getItem("id_vuelo"); // leer el vuelo seleccionado
 
 async function cargarAsientos() {
     try {
-        const res = await fetch(`http://127.0.0.1:5000/vuelo/${vueloId}/asientos`);
+        const res = await fetch(`${url}/vuelo/${vueloId}/asientos`);
         const data = await res.json();
         const contenedor = document.getElementById("asientosContainer");
 
